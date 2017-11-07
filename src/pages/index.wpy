@@ -1,4 +1,5 @@
 <style lang="scss">
+  @import '../scss/_theme.scss';
 
 </style>
 <template>
@@ -8,7 +9,9 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
+  import wepy from 'wepy';
+  import urls from '../services/urls.js';
+  import page from '../services/page.js';
 
   export default class Index extends wepy.page {
     config = {
@@ -18,12 +21,36 @@
 
     }
 
+    onPullDownRefresh() {
+      if (this.page) {
+        this.methods.refresh();
+      }
+    }
+    onReachBottom() {
+      if (this.page) {
+        this.methods.more();
+      }
+    }
+
+    data = {
+      page: null,
+    }
+
     computed = {
 
     }
 
     methods = {
-
+      refresh: () => {
+        this.page.reset().then(data => {
+          console.log(data);
+        });
+      },
+      more: () => {
+        this.page.next().then(data => {
+          console.log(data);
+        });
+      }
     }
 
     events = {
@@ -31,7 +58,11 @@
     }
 
     onLoad() {
-
+      this.page = page.Page({
+        url: urls.indexList,
+      });
+      this.page.init();
     }
   }
+
 </script>

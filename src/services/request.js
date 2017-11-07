@@ -243,7 +243,7 @@ function doLogin() {
       success: function(res) {
         console.log('获取用户信息成功', code, res);
         global.userInfo = res.userInfo;
-        serverLogin(code, res)
+        // serverLogin(code, res);
       },
       fail: function(res) {
         setTimeout(() => {
@@ -259,66 +259,66 @@ function doLogin() {
   }
 
   // 获取用户信息成功后向服务器请求登录
-  function serverLogin(code, res) {
-    wepy.request({
-      url: urls.login,
-      data: {
-        code: code,
-        userInfo: JSON.stringify(res)
-      },
-      method: 'POST',
-      header: {
-        // 设置请求的 header
-        'X-APP-TOKEN': global.appToken,
-        'Accept': 'application/json',
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
-      success: function(res) {
-        if (typeof res.data === 'string') {
-          res.data = JSON.parse(res.data);
-        }
-        // success
-        if (res.data && res.data.success === true) {
-          console.log('微信登录成功')
-          global.userId = res.data.result.userId;
-          global.appToken = res.data.result.sessionId;
-          global.protocolIsReaded = res.data.result.protocolIsReaded;
+  // function serverLogin(code, res) {
+  //   wepy.request({
+  //     url: urls.login,
+  //     data: {
+  //       code: code,
+  //       userInfo: JSON.stringify(res)
+  //     },
+  //     method: 'POST',
+  //     header: {
+  //       // 设置请求的 header
+  //       'X-APP-TOKEN': global.appToken,
+  //       'Accept': 'application/json',
+  //       'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+  //     },
+  //     success: function(res) {
+  //       if (typeof res.data === 'string') {
+  //         res.data = JSON.parse(res.data);
+  //       }
+  //       // success
+  //       if (res.data && res.data.success === true) {
+  //         console.log('微信登录成功')
+  //         global.userId = res.data.result.userId;
+  //         global.appToken = res.data.result.sessionId;
+  //         global.protocolIsReaded = res.data.result.protocolIsReaded;
 
-          deferred.resolve({
-            success: true,
-            ...global,
-          })
-        } else {
-          wepy.showModal({
-            content: (res.data && res.data.msg) ? res.data.msg : '微信登录失败',
-            showCancel: false,
-            confirmText: '知道了',
+  //         deferred.resolve({
+  //           success: true,
+  //           ...global,
+  //         })
+  //       } else {
+  //         wepy.showModal({
+  //           content: (res.data && res.data.msg) ? res.data.msg : '微信登录失败',
+  //           showCancel: false,
+  //           confirmText: '知道了',
 
-          })
+  //         })
 
-          console.log('微信登录失败', res.data)
-          deferred.reject({
-            success: false,
-            errCode: res.data.code,
-            errMsg: res.data.msg
-          })
-        }
-      },
-      fail: function(res) {
-        wepy.showModal({
-          content: '似乎出错了，请稍后再试。',
-          showCancel: false,
-          confirmText: '知道了',
+  //         console.log('微信登录失败', res.data)
+  //         deferred.reject({
+  //           success: false,
+  //           errCode: res.data.code,
+  //           errMsg: res.data.msg
+  //         })
+  //       }
+  //     },
+  //     fail: function(res) {
+  //       wepy.showModal({
+  //         content: '似乎出错了，请稍后再试。',
+  //         showCancel: false,
+  //         confirmText: '知道了',
 
-        })
+  //       })
 
-        deferred.reject({
-          success: false,
-          errMsg: res.errMsg
-        })
-      }
-    })
-  }
+  //       deferred.reject({
+  //         success: false,
+  //         errMsg: res.errMsg
+  //       })
+  //     }
+  //   })
+  // }
 
   return deferred.promise;
 }

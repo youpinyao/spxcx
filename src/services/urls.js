@@ -1,9 +1,9 @@
 import util from './util.js';
 
-const path = 'https://ttgame-liunx.zhanzhibin.com/';
+const path = 'http://localhost';
 
 const urls = {
-  homeList: 'homeList.ashx',
+  indexList: 'indexList.json',
 }
 
 function convert(urls) {
