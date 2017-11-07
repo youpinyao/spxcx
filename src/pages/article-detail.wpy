@@ -22,7 +22,6 @@
 </style>
 <template>
   <view class="list">
-    <load-more wx:if="{{!articleData}}">加载中...</load-more>
     <view class="video">
       <video src="{{articleData.video}}"
         id="articleVideo"
