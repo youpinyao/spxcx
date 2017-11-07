@@ -1,0 +1,69 @@
+
+$black: #000000 !global;
+$white: #ffffff !global;
+$c3: #333333 !global;
+$c6: #666666 !global;
+$c9: #999999 !global;
+
+@mixin lineClamp($line) {
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+}
+
+@mixin ellipsis() {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@mixin clearfix() {
+  &:after {
+    content: "\200B";
+    display: block;
+    height: 0;
+    clear: both;
+  }
+}
+
+@mixin flex($num: 1) {
+  -webkit-box-flex: $num;
+  -ms-flex: $num;
+  flex: $num;
+  -webkit-flex: $num;
+}
+
+@mixin displayflex() {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -webkit-flex;
+}
+
+@mixin appearance() {
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+@mixin center() {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+@mixin transition($prop: all 300ms ease) {
+  transition: $prop;
+  -webkit-transition: $prop;
+}
+
+@mixin transform($prop) {
+  -webkit-transform: $prop;
+  transform: $prop;
+}
