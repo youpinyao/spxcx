@@ -17,8 +17,8 @@
   export default class extends wepy.app {
     config = {
       pages: [
-        'pages/article-detail',
         'pages/index',
+        'pages/article-detail',
         'pages/webview',
       ],
       window: {
