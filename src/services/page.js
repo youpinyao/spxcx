@@ -88,7 +88,10 @@ Page.prototype.update = function() {
     // 保存当前请求的信息
     _this.currentData = data;
 
-    deferred.resolve(_this._data);
+    deferred.resolve({
+      full: data,
+      data: _this._data,
+    });
   }, function (data) {
     _this._hasFirstRquest = true;
 

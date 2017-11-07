@@ -1,0 +1,35 @@
+<style lang="scss"
+  scoped>
+  @import '../scss/_theme.scss';
+  .load-more {
+    color: $c9;
+    text-align: center;
+    padding: 20rpx 0;
+    font-size: 24rpx;
+  }
+
+</style>
+<template>
+  <view class="load-more">
+    <view>
+      <slot></slot>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class NullList extends wepy.component {
+    props = {
+
+    }
+
+    components = {
+
+    }
+    methods = {
+
+    }
+  }
+
+</script>

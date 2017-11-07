@@ -1,10 +1,59 @@
-<style lang="scss">
+<style lang="scss"
+  scoped>
   @import '../scss/_theme.scss';
+  .item {
+    .picture {
+      height: 420rpx;
+      width: 100%;
+      overflow: hidden;
+      image {
+        width: 100%;
+        height: auto;
+      }
+    }
+    .t1 {
+      font-size: 36rpx;
+      color: $black;
+      padding: 40rpx 30rpx 20rpx 30rpx;
+      text-align: center;
+    }
+    .t2 {
+      font-size: 28rpx;
+      color: $c9;
+      padding: 0 30rpx 20rpx 30rpx;
+      text-align: center;
+    }
+    .t3 {
+      font-size: 30rpx;
+      color: $c3;
+      padding: 0rpx 30rpx 40rpx 30rpx;
+      text-align: justify;
+    }
+  }
 
 </style>
 <template>
-  <view class="container">
+  <view class="list">
+    <null-list wx:if="{{list.length <= 0}}">暂无数据</null-list>
+    <repeat for="{{list}}"
+      key="index"
+      index="index"
+      item="item">
+      <view class="item"
+        data-id="{{item.id}}"
+        @tap="toDetail">
 
+        <view class="picture">
+          <image src="{{item.picture}}"
+            mode="widthFix"></image>
+        </view>
+        <view class="t1">{{item.title}}</view>
+        <view class="t2">{{item.second_title}}</view>
+        <view class="t3">{{item.desc}}</view>
+      </view>
+    </repeat>
+    <load-more wx:if="{{!isLast}}">加载中...</load-more>
+    <load-more wx:if="{{isLast}}">已到底部</load-more>
   </view>
 </template>
 
@@ -12,13 +61,18 @@
   import wepy from 'wepy';
   import urls from '../services/urls.js';
   import page from '../services/page.js';
+  import loading from '../services/loading.js';
+  import nullList from '../components/nullList';
+  import loadMore from '../components/loadMore';
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '首页'
+      navigationBarTitleText: '首页',
+      enablePullDownRefresh: true,
     }
     components = {
-
+      'null-list': nullList,
+      'load-more': loadMore,
     }
 
     onPullDownRefresh() {
@@ -34,6 +88,8 @@
 
     data = {
       page: null,
+      list: [],
+      isLast: false,
     }
 
     computed = {
@@ -41,15 +97,32 @@
     }
 
     methods = {
+      toDetail: (e) => {
+        wepy.navigateTo({
+          url: `/pages/article-detail?id=${e.currentTarget.dataset.id}`,
+        })
+      },
       refresh: () => {
         this.page.reset().then(data => {
-          console.log(data);
+          this.list = data.full.result.list;
+          this.$apply();
+          wepy.stopPullDownRefresh();
+          loading.hide();
+
+          this.isLast = false;
+        }, () => {
+          wepy.stopPullDownRefresh();
+          loading.hide();
         });
       },
       more: () => {
-        this.page.next().then(data => {
-          console.log(data);
+        const promise = this.page.next();
+        promise && promise.then(data => {
+          this.list = this.list.concat(data.full.result.list);
+          this.$apply();
         });
+
+        this.isLast = !promise;
       }
     }
 
@@ -58,10 +131,11 @@
     }
 
     onLoad() {
+      loading.show();
       this.page = page.Page({
         url: urls.indexList,
       });
-      this.page.init();
+      this.methods.refresh();
     }
   }
 

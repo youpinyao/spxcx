@@ -1,0 +1,130 @@
+<style lang="scss"
+  scoped>
+  @import '../scss/_theme.scss';
+  .video,
+  video {
+    width: 100%;
+    height: 420rpx;
+    .play {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      cover-image {
+        width: 100rpx;
+        height: 100rpx;
+        @include center();
+      }
+    }
+  }
+
+</style>
+<template>
+  <view class="list">
+    <load-more wx:if="{{!articleData}}">加载中...</load-more>
+    <view class="video">
+      <video src="{{articleData.video}}"
+        id="articleVideo"
+        autoplay
+        duration="{{articleData.duration / 1000 || undefined}}"
+        bindtimeupdate="bindTimeUpdate"
+        bindpause="bindPause"
+        bindplay="bindPlay"
+        poster="{{articleData.picture}}"
+        controls="{{!videoPaused}}">
+        <cover-view wx:if="{{videoPaused}}"
+          class="play">
+          <cover-image src="../images/play-icon.png"
+            @tap="playVideo"></cover-image>
+        </cover-view>
+      </video>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import urls from '../services/urls.js';
+  import request from '../services/request.js';
+  import loading from '../services/loading.js';
+  import loadMore from '../components/loadMore';
+
+  export default class ArticleDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '详情',
+    }
+
+    components = {
+      'load-more': loadMore,
+    }
+
+    data = {
+      articleId: '',
+      articleData: null,
+      sharePaused: false,
+      videoPaused: false,
+      videoContext: null,
+      isTimeUp: false,
+      showShareTip: false,
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+      bindTimeUpdate: (e) => {
+        if (this.sharePaused === false && e.detail.currentTime * 1000 >= this.articleData.pause_time) {
+          this.videoContext.pause();
+          // this.isTimeUp = true;
+          this.methods.showShareTip();
+        }
+      },
+      bindPause: () => {
+        this.videoPaused = true;
+      },
+      bindPlay: () => {
+        this.videoPaused = false;
+      },
+      playVideo: () => {
+        if (this.isTimeUp) {
+          this.methods.showShareTip();
+          return;
+        }
+        this.videoContext.play();
+      },
+      showShareTip: () => {
+        this.showShareTip = true;
+      },
+      refresh: () => {
+        request.get(urls.articleDetail, {
+          id: this.articleId,
+        }).then(data => {
+          this.articleData = data.result;
+          this.$apply();
+          loading.hide();
+        }, function() {
+          loading.hide();
+        });
+      },
+
+    }
+
+    events = {
+
+    }
+
+    onReady() {
+      this.videoContext = wepy.createVideoContext('articleVideo');
+      console.log(this.videoContext);
+    }
+
+    onLoad(option) {
+      loading.show();
+      this.articleId = option.id;
+      this.methods.refresh();
+    }
+  }
+
+</script>
