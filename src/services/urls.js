@@ -1,7 +1,7 @@
 import util from './util.js';
 
-const path = 'http://localhost/spxcx/src/json/';
-// const path = 'https://xcx.fetribe.cn/spxcx/src/json/';
+// const path = 'http://localhost/spxcx/src/json/';
+const path = 'https://xcx.fetribe.cn/spxcx/src/json/';
 
 const urls = {
   indexList: 'indexList.json',
