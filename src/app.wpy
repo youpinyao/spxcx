@@ -1,11 +1,11 @@
 <style lang="scss">
   @import './scss/_theme.scss';
   page {
-    background-color: #eeeeee;
+    background-color: #ffffff;
   }
 
   view {
-    line-height: 20px;
+    line-height: 40rpx;
   }
 
 </style>
@@ -38,7 +38,16 @@
     }
 
     onLaunch() {
+      const showModal = wepy.showModal;
+      wepy.showModal = function(config) {
+        showModal(config);
+      }
 
+      wepy.showAlert = function(config) {
+        config.showCancel = false;
+        config.confirmText = '知道了';
+        wepy.showModal(config);
+      }
     }
   }
 

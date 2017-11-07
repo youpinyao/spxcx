@@ -19,6 +19,83 @@
     }
   }
 
+  .main-content {
+    position: relative;
+    padding-right: 120rpx;
+    padding-left: 30rpx;
+    .t1 {
+      font-size: 46rpx;
+      padding: 40rpx 0 25rpx 0;
+      line-height: 50rpx;
+    }
+    .t1-line {
+      width: 80rpx;
+      height: 2rpx;
+      background-color: $c9;
+    }
+    .t2 {
+      font-size: 30rpx;
+      color: $c9;
+      padding: 20rpx 0 30rpx 0;
+    }
+    .t3 {
+      font-size: 28rpx;
+      color: $c9;
+      padding-bottom: 20rpx;
+    }
+    .share-icon {
+      font-size: 30rpx;
+      color: #5d5d5d;
+      position: absolute;
+      right: 30rpx;
+      top: 40rpx;
+      text-align: center;
+      image {
+        width: 46rpx;
+        height: 46rpx;
+      }
+      button {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        opacity: 0;
+      }
+    }
+  }
+
+  .recommend-line {
+    border-top: 1px solid #f3f3f3;
+    margin: 0 20rpx;
+  }
+
+  .recommend-list {
+    padding: 30rpx 0;
+    .item {
+      padding: 15rpx 20rpx 15rpx 20rpx;
+      min-height: 167rpx;
+      &:active {
+        background-color: #f3f3f3;
+      }
+      image {
+        width: 236rpx;
+        height: 167rpx;
+        float: left;
+        margin-right: 20rpx;
+      }
+      .t1 {
+        font-size: 36rpx;
+        line-height: 50rpx;
+      }
+      .t2 {
+        font-size: 30rpx;
+        color: $c9;
+        padding-top: 20rpx;
+      }
+    }
+  }
+
 </style>
 <template>
   <view class="list">
@@ -39,6 +116,33 @@
         </cover-view>
       </video>
     </view>
+    <view class="main-content">
+      <view class="t1">{{articleData.title}}</view>
+      <view class="t1-line"></view>
+      <view class="t2">{{articleData.second_title}}</view>
+      <view class="t3">{{articleData.desc}}</view>
+      <view class="share-icon">
+        <image src="../images/share-icon.png"></image>
+        <view>分享</view>
+        <button open-type="share"></button>
+      </view>
+    </view>
+    <view class="recommend-line"></view>
+    <view class="recommend-list">
+      <repeat for="{{articleData.ad_list}}"
+        key="index"
+        index="index"
+        item="item">
+        <view class="item"
+          data-url="{{item.url}}"
+          @tap="toDetail">
+          <image src="{{item.picture}}"
+            mode="aspectFill"></image>
+          <view class="t1">{{item.title}}</view>
+          <view class="t2">{{item.second_title}}</view>
+        </view>
+      </repeat>
+    </view>
   </view>
 </template>
 
@@ -58,6 +162,28 @@
       'load-more': loadMore,
     }
 
+    onShareAppMessage(res) {
+      if (res.from === 'button') {
+        // 来自页面内转发按钮
+        console.log(res.target);
+      }
+      return {
+        title: this.articleData.share_title,
+        path: `/pages/article-detail?id=${this.articleId}`,
+        imageUrl: this.articleData.share_image || undefined,
+        success: function(res) {
+          // 转发成功
+          this.methods.shareSuccess();
+        },
+        fail: function(res) {
+          // 转发失败
+          wepy.showAlert({
+            content: '转发失败',
+          });
+        }
+      }
+    }
+
     data = {
       articleId: '',
       articleData: null,
@@ -66,17 +192,25 @@
       videoContext: null,
       isTimeUp: false,
       showShareTip: false,
+      shareCount: 0,
     }
 
     computed = {
 
     }
-
     methods = {
+      toDetail: (e) => {
+        wepy.navigateTo({
+          url: `/pages/webview?url=${encodeURIComponent(e.currentTarget.dataset.url)}`,
+        })
+      },
+      shareSuccess: () => {
+        this.shareCount++;
+      },
       bindTimeUpdate: (e) => {
         if (this.sharePaused === false && e.detail.currentTime * 1000 >= this.articleData.pause_time) {
           this.videoContext.pause();
-          // this.isTimeUp = true;
+          this.isTimeUp = true;
           this.methods.showShareTip();
         }
       },

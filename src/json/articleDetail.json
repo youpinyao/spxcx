@@ -2,13 +2,17 @@
   "success": true,
   "result": {
     "id": "123123",
-    "picture": "../images/index-picture-1.jpg",
+    "picture": "https://xcx.fetribe.cn/spxcx/srcimages/index-picture-1.jpg",
     "pause_time": 3000,
     "duration": 15000,
     "video": "https://xcx.fetribe.cn/spxcx/test.mp4",
     "title": "来自没过心浙西的街舞来自没过心浙西的街舞",
     "second_title": "#运动 / 3'6''",
     "desc": "来自没过心浙西的街舞来自没过心浙西的街舞来自没过心浙西的街舞来自没过心浙西的街舞来自没过心浙西的街舞来自没过心浙西的街舞来自没过心浙西的街舞来自没过心浙西的街舞来自没过心浙西的街舞来自没过心浙西的街舞",
+
+    "share_title": "来自没过心浙西的街舞来自没过心浙西的街舞",
+    "share_image": "https://xcx.fetribe.cn/spxcx/srcimages/index-picture-1.jpg",
+
     "ad_list": [{
       "title": "来自没过心浙西的街舞来自没过心浙西的街舞",
       "second_title": "#运动 / 3'6''",

@@ -25,6 +25,7 @@
     }
     .t3 {
       font-size: 30rpx;
+      line-height: 48rpx;
       color: $c3;
       padding: 0rpx 30rpx 40rpx 30rpx;
       text-align: justify;
@@ -34,7 +35,7 @@
 </style>
 <template>
   <view class="list">
-    <null-list wx:if="{{list.length <= 0}}">暂无数据</null-list>
+    <null-list wx:if="{{list && list.length <= 0}}">暂无数据</null-list>
     <repeat for="{{list}}"
       key="index"
       index="index"
@@ -88,7 +89,7 @@
 
     data = {
       page: null,
-      list: [],
+      list: null,
       isLast: false,
     }
 
@@ -118,6 +119,9 @@
       more: () => {
         const promise = this.page.next();
         promise && promise.then(data => {
+          if (!this.list) {
+            this.list = [];
+          }
           this.list = this.list.concat(data.full.result.list);
           this.$apply();
         });

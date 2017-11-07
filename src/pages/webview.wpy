@@ -1,0 +1,44 @@
+<style lang="scss"
+  scoped>
+  @import '../scss/_theme.scss';
+
+
+</style>
+<template>
+  <web-view src="{{webviewUrl}}"></web-view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class Webview extends wepy.page {
+    config = {
+      navigationBarTitleText: '详情',
+    }
+
+    components = {
+
+    }
+
+    data = {
+      webviewUrl: ''
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+
+    onLoad(option) {
+      this.webviewUrl = decodeURIComponent(option.url);
+    }
+  }
+
+</script>
