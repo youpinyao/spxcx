@@ -172,11 +172,11 @@
         title: this.articleData.share_title,
         path: `/pages/article-detail?id=${this.articleId}`,
         imageUrl: this.articleData.share_image || undefined,
-        success: function(res) {
+        success: (res) => {
           // 转发成功
           this.methods.shareSuccess();
         },
-        fail: function(res) {
+        fail: (res) => {
           // 转发失败
           // wepy.showAlert({
           //   content: '转发失败',
@@ -192,8 +192,8 @@
       videoPaused: false,
       videoContext: null,
       isTimeUp: false,
-      showShareTip: false,
       shareCount: 0,
+      maxShareCount: 3,
     }
 
     computed = {
@@ -206,10 +206,38 @@
         })
       },
       shareSuccess: () => {
-        this.shareCount++;
+        if (this.isTimeUp) {
+          this.shareCount++;
+
+          if (this.shareCount === 1) {
+            wepy.showModal({
+              title: '发送失败！',
+              content: '请重新发送一个不同的群！',
+              showCancel: false,
+              confirmText: '好',
+            });
+          }
+          if (this.shareCount === 2) {
+            wepy.showModal({
+              title: '发送成功！',
+              content: '还差最后一个不同的群！',
+              showCancel: false,
+              confirmText: '好',
+            });
+          }
+          if (this.shareCount === 3) {
+            wepy.showModal({
+              title: '发送成功！',
+              content: '请点击按钮继续播放',
+              showCancel: false,
+              confirmText: '好',
+            });
+            this.isTimeUp = false;
+          }
+        }
       },
       bindTimeUpdate: (e) => {
-        if (this.sharePaused === false && e.detail.currentTime * 1000 >= this.articleData.pause_time) {
+        if (this.shareCount < this.maxShareCount && e.detail.currentTime * 1000 >= this.articleData.pause_time) {
           this.videoContext.pause();
           this.isTimeUp = true;
           this.methods.showShareTip();
@@ -229,7 +257,12 @@
         this.videoContext.play();
       },
       showShareTip: () => {
-        this.showShareTip = true;
+        wepy.showModal({
+          title: '',
+          content: '点击右上角发送到微信群可以免流量观看哦！',
+          showCancel: false,
+          confirmText: '好',
+        });
       },
       refresh: () => {
         request.get(urls.articleDetail, {
