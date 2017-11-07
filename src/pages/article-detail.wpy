@@ -83,6 +83,7 @@
         height: 167rpx;
         float: left;
         margin-right: 20rpx;
+        background-color: #f3f3f3;
       }
       .t1 {
         font-size: 36rpx;
@@ -177,9 +178,9 @@
         },
         fail: function(res) {
           // 转发失败
-          wepy.showAlert({
-            content: '转发失败',
-          });
+          // wepy.showAlert({
+          //   content: '转发失败',
+          // });
         }
       }
     }

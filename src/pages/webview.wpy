@@ -1,8 +1,6 @@
 <style lang="scss"
   scoped>
   @import '../scss/_theme.scss';
-
-
 </style>
 <template>
   <web-view src="{{webviewUrl}}"></web-view>

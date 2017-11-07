@@ -19,6 +19,7 @@
       pages: [
         'pages/article-detail',
         'pages/index',
+        'pages/webview',
       ],
       window: {
         backgroundTextStyle: 'light',
