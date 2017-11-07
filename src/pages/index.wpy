@@ -2,6 +2,9 @@
   scoped>
   @import '../scss/_theme.scss';
   .item {
+    &:active {
+      background-color: #f3f3f3;
+    }
     .picture {
       height: 420rpx;
       width: 100%;

@@ -287,6 +287,10 @@
       console.log(this.videoContext);
     }
 
+    onHide() {
+      this.videoContext.pause();
+    }
+
     onLoad(option) {
       loading.show();
       this.articleId = option.id;
